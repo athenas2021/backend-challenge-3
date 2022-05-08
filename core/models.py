@@ -3,6 +3,7 @@ from django.db import models
 
 class DayProcess(models.Model):
     date = models.DateField(auto_now=False, blank=False, null=False)
+    process_date = models.DateField(auto_now=True)
     
 
     db_table = 'day_process'
