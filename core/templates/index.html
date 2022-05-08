@@ -22,25 +22,48 @@
   </head>
 
   <body>
-    <form
-      action="{% url 'upload_file' %}"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      {% csrf_token %}
-      <h5 class="card-title">IMPORTAR TRANSAÇÕES</h5>
-
-      {% comment %}
-      <label for="formFile" class="form-label"
-        >Default file input example</label
+    <br>
+    <div class="container">
+      <form
+        action="{% url 'upload_file' %}"
+        method="POST"
+        enctype="multipart/form-data"
       >
-      {% endcomment %}
-      <input class="form-control" type="file" id="formFile" name="file" />
-      <p class="card-text">Selecione o arquivo para importar</p>
+        {% csrf_token %}
+        <h5 class="card-title">IMPORTAR TRANSAÇÕES</h5>
 
-      <button type="submit" class="btn btn-primary">Importar</button>
-    </form>
+        {% comment %}
+        <label for="formFile" class="form-label"
+          >Default file input example</label
+        >
+        {% endcomment %}
+        <input class="form-control" type="file" id="formFile" name="file" />
+        <p class="card-text">Selecione o arquivo para importar</p>
 
+        <button type="submit" class="btn btn-primary">Importar</button>
+      </form>
+    </div>
+    <br><br>
+    <div class="container">
+      <table class="table" style="width:100%">
+        <tr>
+          <th>DATA TRANSAÇÕES</th>
+          <th>DATA IMPORTAÇÃO</th>
+        </tr>
+
+        {% for process in all_process %}
+        <tr>
+          <td>{{ process.date }}</td>
+          <td>{{ process.process_date }}</td>
+        </tr>
+        
+        {% endfor %}
+
+
+
+      </table>
+
+    </div>
     <!-- ##### Footer Area Start ##### -->
 
     <!-- ##### All Javascript Files ##### -->

@@ -6,7 +6,11 @@ from .models import DayProcess, Transaction
 
 
 def index(request):
-    return render(request, 'index.html')
+    all_process = list(DayProcess.objects.all().values())
+    data = {
+        'all_process': all_process
+    }
+    return render(request, 'index.html', data)
 
 
 def upload_file(request):
