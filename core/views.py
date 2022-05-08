@@ -29,10 +29,8 @@ def _handle_uploaded_file(f):
             # Se for primeira linha, guardar data do arquivo
             data_arquivo = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
 
-            # Verificar no banco se já existe a transação desse dia
-            seach_process = DayProcess.objects.filter(date=data_arquivo)
-
-            if len(seach_process) > 0:
+            # Verificar no banco se já existe a transação desse dia 
+            if len(DayProcess.objects.filter(date=data_arquivo)) > 0:
                 print('Já existe um processamento para o dia: ', data_arquivo)
                 break
             else:
