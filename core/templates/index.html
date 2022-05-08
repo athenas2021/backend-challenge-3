@@ -22,20 +22,24 @@
   </head>
 
   <body>
-    
-            <form action="{% url 'upload_file' %}" method='POST'
-            enctype="multipart/form-data">
-                {% csrf_token %}
-          <h5 class="card-title">IMPORTAR TRANSAÇÕES</h5>
-     
-            {% comment %} <label for="formFile" class="form-label">Default file input example</label> {% endcomment %}
-            <input class="form-control" type="file" id="formFile" name="file">
-            <p class="card-text" >Selecione o arquivo para importar</p>
-         
-          <button type="submit" class="btn btn-primary">Importar</button>
-        </form>
+    <form
+      action="{% url 'upload_file' %}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+      <h5 class="card-title">IMPORTAR TRANSAÇÕES</h5>
 
+      {% comment %}
+      <label for="formFile" class="form-label"
+        >Default file input example</label
+      >
+      {% endcomment %}
+      <input class="form-control" type="file" id="formFile" name="file" />
+      <p class="card-text">Selecione o arquivo para importar</p>
 
+      <button type="submit" class="btn btn-primary">Importar</button>
+    </form>
 
     <!-- ##### Footer Area Start ##### -->
 
