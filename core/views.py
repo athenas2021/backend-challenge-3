@@ -1,4 +1,3 @@
-from os import abort
 from django.shortcuts import render
 from .forms import UploadFileForm
 import csv, io
@@ -42,17 +41,7 @@ def _handle_uploaded_file(f):
                 if None in row_info.values() or '' in row_info.values():
                         print('Algum valor nulo na linha, pulando registro: ', count)
                         continue
-                transaction = Transaction(
-                        origin_bank=row_info['origin_bank'],
-                        origin_agency=row_info['origin_agency'],
-                        origin_account=row_info['origin_account'],
-                        destiny_bank=row_info['destiny_bank'],
-                        destiny_agency=row_info['destiny_agency'],
-                        destiny_account=row_info['destiny_account'],
-                        transaction_value=float(row_info['transaction_value']),
-                        transaction_date_time=row_info['transaction_date_time'],
-                        day_process=row_info['day_process'],
-                        )
+                transaction = _instantiate_transaction(row_info)
                 if not transaction == None:
                     transaction.save()
         else:
@@ -68,18 +57,7 @@ def _handle_uploaded_file(f):
                     print('Algum valor nulo na linha, pulando registro: ', count)
                     continue
 
-                transaction = Transaction(
-                    origin_bank=row_info['origin_bank'],
-                    origin_agency=row_info['origin_agency'],
-                    origin_account=row_info['origin_account'],
-                    destiny_bank=row_info['destiny_bank'],
-                    destiny_agency=row_info['destiny_agency'],
-                    destiny_account=row_info['destiny_account'],
-                    transaction_value=float(row_info['transaction_value']),
-                    transaction_date_time=row_info['transaction_date_time'],
-                    day_process=row_info['day_process'],
-                    
-                    )
+                transaction = _instantiate_transaction(row_info)
                 if not transaction == None:
                     transaction.save()
         count += 1
@@ -99,6 +77,19 @@ def _validate_row(row, day_process):
             }
     return row_info
 
+def _instantiate_transaction(row_info):
+    transaction = Transaction(
+        origin_bank=row_info['origin_bank'],
+        origin_agency=row_info['origin_agency'],
+        origin_account=row_info['origin_account'],
+        destiny_bank=row_info['destiny_bank'],
+        destiny_agency=row_info['destiny_agency'],
+        destiny_account=row_info['destiny_account'],
+        transaction_value=float(row_info['transaction_value']),
+        transaction_date_time=row_info['transaction_date_time'],
+        day_process=row_info['day_process'],
+    )
+    return transaction
 '''
 Banco origem - row[0]
 Agência origem - row[1]
