@@ -1,7 +1,9 @@
+from os import abort
 from django.shortcuts import render
 from .forms import UploadFileForm
 import csv, io
 from datetime import datetime
+from .models import DayProcess, Transaction
 
 
 def index(request):
@@ -21,27 +23,81 @@ def _handle_uploaded_file(f):
     io_string = io.StringIO(dataset)
     count = 0
     data_arquivo = None
+    day_process = None
     for row in csv.reader(io_string, delimiter=','):
+        transaction = None
         if count == 0:
             # Se for primeira linha, guardar data do arquivo
             data_arquivo = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
-            print('Primeira linha:', data_arquivo)
 
             # Verificar no banco se já existe a transação desse dia
+            seach_process = DayProcess.objects.filter(date=data_arquivo)
+
+            if len(seach_process) > 0:
+                print('Já existe um processamento para o dia: ', data_arquivo)
+                break
+            else:
+                day_process = DayProcess.objects.create(date=data_arquivo)
+                row_info = _validate_row(row, day_process)
+                if None in row_info.values() or '' in row_info.values():
+                        print('Algum valor nulo na linha, pulando registro: ', count)
+                        continue
+                transaction = Transaction(
+                        origin_bank=row_info['origin_bank'],
+                        origin_agency=row_info['origin_agency'],
+                        origin_account=row_info['origin_account'],
+                        destiny_bank=row_info['destiny_bank'],
+                        destiny_agency=row_info['destiny_agency'],
+                        destiny_account=row_info['destiny_account'],
+                        transaction_value=float(row_info['transaction_value']),
+                        transaction_date_time=row_info['transaction_date_time'],
+                        day_process=row_info['day_process'],
+                        )
+                if not transaction == None:
+                    transaction.save()
         else:
 
             data_linha = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
 
-            print('Data do arquivo:', data_arquivo)
-            print('Data da linha', count ,':', data_linha)
-            # Comparar se data da linha é igual data do arquivo
             # TODO - Melhorar comparação de datas escrota
-            if not data_arquivo.day == data_linha.day or not data_arquivo.month == data_linha.month or not data_arquivo.year == data_linha.year:
-                # abortar leitura de arquivo
-                print('IGNORAR')
+            if data_arquivo.day == data_linha.day and data_arquivo.month == data_linha.month and data_arquivo.year == data_linha.year:
 
-            
+                row_info = _validate_row(row, day_process)
+
+                if None in row_info.values() or '' in row_info.values():
+                    print('Algum valor nulo na linha, pulando registro: ', count)
+                    continue
+
+                transaction = Transaction(
+                    origin_bank=row_info['origin_bank'],
+                    origin_agency=row_info['origin_agency'],
+                    origin_account=row_info['origin_account'],
+                    destiny_bank=row_info['destiny_bank'],
+                    destiny_agency=row_info['destiny_agency'],
+                    destiny_account=row_info['destiny_account'],
+                    transaction_value=float(row_info['transaction_value']),
+                    transaction_date_time=row_info['transaction_date_time'],
+                    day_process=row_info['day_process'],
+                    
+                    )
+                if not transaction == None:
+                    transaction.save()
         count += 1
+
+    
+def _validate_row(row, day_process):
+    row_info =  {
+                'origin_bank': row[0],
+                'origin_agency': row[1],
+                'origin_account': row[2],
+                'destiny_bank': row[3],
+                'destiny_agency': row[4],
+                'destiny_account': row[5],
+                'transaction_value': row[6],
+                'transaction_date_time': datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S'),
+                'day_process': day_process
+            }
+    return row_info
 
 '''
 Banco origem - row[0]
