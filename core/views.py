@@ -3,6 +3,7 @@ from .forms import UploadFileForm
 import csv, io
 from datetime import datetime
 
+
 def index(request):
     return render(request, 'index.html')
 
@@ -15,6 +16,7 @@ def upload_file(request):
             _handle_uploaded_file(request.FILES['file'])
         return render(request, 'index.html')
 
+
 def _handle_uploaded_file(f):
     dataset = f.read().decode('UTF-8')
     io_string = io.StringIO(dataset)
@@ -26,15 +28,14 @@ def _handle_uploaded_file(f):
             data = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
             print('Primeira linha:', data)
         else:
-            
+
             datetimex = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
 
             print('Data do arquivo:', data)
-            print('Data da linha', count,':', datetimex)
+            print('Data da linha', count ,':', datetimex)
 
-            if not data.day ==  datetimex.day or not data.month ==  datetimex.month or not data.year ==  datetimex.year :
+            if not data.day == datetimex.day or not data.month == datetimex.month or not data.year == datetimex.year:
                 print('IGNORAR')
         count += 1
-            
-        #print(row)
 
+        # print(row)
