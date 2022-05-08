@@ -26,6 +26,8 @@ def _handle_uploaded_file(f):
             # Se for primeira linha, guardar data do arquivo
             data_arquivo = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
             print('Primeira linha:', data_arquivo)
+
+            # Verificar no banco se já existe a transação desse dia
         else:
 
             data_linha = datetime.strptime(row[7], '%Y-%m-%dT%H:%M:%S')
@@ -37,7 +39,6 @@ def _handle_uploaded_file(f):
             if not data_arquivo.day == data_linha.day or not data_arquivo.month == data_linha.month or not data_arquivo.year == data_linha.year:
                 # abortar leitura de arquivo
                 print('IGNORAR')
-                break
 
             
         count += 1
