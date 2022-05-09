@@ -11,11 +11,12 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, username, **extra_fields):
+        print('xablo')
         """
-        Creates and saves a User with the given email and password.
+        Creates and saves a User with the given email and username.
         """
         if not email or not username:
-            raise ValueError('The given email or username must be set')
+            raise ValueError('The given email and username must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password('123456')
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email, username, **extra_fields):
+        print('xablos')
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, username, **extra_fields)
 
