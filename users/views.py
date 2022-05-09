@@ -13,9 +13,20 @@ def users(request):
 
 def create_user(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            print('valido')
+        if not request.POST['username'] is None and not request.POST['email'] is None:
+            try:
+                print('teste1')
+                user = User(
+                    username = request.POST['username'],
+                    email = request.POST['email'],
+                    password = '123456'
+                    )
+                user.save()
+                print('teste2')
+                
+                
+            except:
+                print('Não gravou usuário')
         return render(request, 'users.html')
 
 def user(request):
