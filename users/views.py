@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .forms import UserCreationForm
 from .models import UserManager, User
-
+from django.core.mail import send_mail
 
 def users(request):
     all_users = list(User.objects.all().values())
@@ -15,18 +15,27 @@ def create_user(request):
     if request.method == 'POST':
         if not request.POST['username'] is None and not request.POST['email'] is None:
             try:
-                print('teste1')
+                import random
+                passw = str(random.randint(100000, 999999))
                 user = User(
                     username = request.POST['username'],
                     email = request.POST['email'],
-                    password = '123456'
+                    password = passw
                     )
                 user.save()
+                send_mail(
+                    'Nova conta',
+                    'Sua senha: {passw}.'.format(passw=passw),
+                    'suport@alurachallenge.com',
+                    [request.POST['email']],
+                    fail_silently=False,
+                )
                 print('teste2')
                 
                 
-            except:
-                print('Não gravou usuário')
+            except Exception:
+                print(dir(Exception.args))
+                print('Não gravou usuário', Exception)
         return render(request, 'users.html')
 
 def user(request):
