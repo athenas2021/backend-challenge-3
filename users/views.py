@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import UserCreationForm
 from .models import UserManager, User
 from django.core.mail import send_mail
@@ -34,7 +34,7 @@ def create_user(request):
                 )
             except Exception as e:
                 print('Não gravou usuário', e)
-        return render(request, 'users.html')
+        return redirect('users')
 
 
 def edit_user(request):
@@ -44,25 +44,29 @@ def edit_user(request):
             user.user_name = request.POST['username']
             user.email = request.POST['email']
             user.save()
-            return render(request, 'users.html')
+            return redirect('users')
+
+def delete_user(request):
+    if request.method == 'POST':
+        if not request.POST['delete'] is None:
+            user = User.objects.get(pk=int(request.POST['delete']))
+            user.delete()
+    return redirect('users')
 
 def user(request):
     if request.method == 'POST':
-
         data = {
             'type': 'include'
+        }   
+    if 'edit' in request.POST:
+        user = User.objects.get(pk=int(request.POST['edit']))
+        data = {
+            'type': 'edit',
+            'user_id': request.POST['edit'],
+            'user_name': user.get_username(),
+            'user_email': user.email
         }
-    if request.method == 'POST':    
-        if 'edit' in request.POST:
-            user = User.objects.get(pk=int(request.POST['edit']))
-            data = {
-                'type': 'edit',
-                'user_id': request.POST['edit'],
-                'user_name': user.get_username(),
-                'user_email': user.email
-            }
 
-    
     return render(request, 'user.html', data)
 
 
