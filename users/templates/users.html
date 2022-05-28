@@ -47,7 +47,8 @@
               {% csrf_token %}
             <button type="submit" name="edit" value={{user.id}} class="btn btn-warning">Editar</button>
             </form>
-            <form action="{% url 'user' %}"  method="POST" >
+            <form action="{% url 'delete_user' %}"  method="POST" >
+              {% csrf_token %}
             <button type="submit" name="delete" value={{ user.id }} class="btn btn-danger">Deletar</button>
             </form>
           </td>
