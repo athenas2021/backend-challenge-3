@@ -4,7 +4,7 @@ from .models import UserManager, User
 from django.core.mail import send_mail
 
 def users(request):
-    all_users = list(User.objects.all().values())
+    all_users = list(User.objects.all().order_by('id').values())
     data = {
         'all_users': all_users
     }
@@ -36,8 +36,34 @@ def create_user(request):
                 print('Não gravou usuário', e)
         return render(request, 'users.html')
 
+
+def edit_user(request):
+    if request.method == 'POST':
+        if not request.POST['username'] is None and not request.POST['email'] is None:
+            user = User.objects.get(pk=int(request.POST['submit']))
+            user.user_name = request.POST['username']
+            user.email = request.POST['email']
+            user.save()
+            return render(request, 'users.html')
+
 def user(request):
-    return render(request, 'user.html')
+    if request.method == 'POST':
+
+        data = {
+            'type': 'include'
+        }
+    if request.method == 'POST':    
+        if 'edit' in request.POST:
+            user = User.objects.get(pk=int(request.POST['edit']))
+            data = {
+                'type': 'edit',
+                'user_id': request.POST['edit'],
+                'user_name': user.get_username(),
+                'user_email': user.email
+            }
+
+    
+    return render(request, 'user.html', data)
 
 
 '''

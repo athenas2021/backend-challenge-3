@@ -22,10 +22,12 @@
   <body>
     <br />
     <div class="container">
-      {% csrf_token %}
       <h1 class="card-title">Usuários cadastrados</h1>
-
-      <a href="{% url 'user' %}">Novo</a>
+      <form action="{% url 'user' %}"  method="POST">
+        {% csrf_token %}
+      <input type="submit" value="Novo" name ="include" >
+    </form>
+      <!-- <a href="{% url 'user' %}">Novo</a> -->
     </div>
     <br /><br />
     <div class="container">
@@ -33,12 +35,22 @@
         <tr>
           <th scope="col">Nome</th>
           <th scope="col">E-mail</th>
+          <th scope="col">Opções</th>
         </tr>
 
         {% for user in all_users %}
         <tr scope="row">
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
+          <td>
+            <form action="{% url 'user' %}"  method="POST" >
+              {% csrf_token %}
+            <button type="submit" name="edit" value={{user.id}} class="btn btn-warning">Editar</button>
+            </form>
+            <form action="{% url 'user' %}"  method="POST" >
+            <button type="submit" name="delete" value={{ user.id }} class="btn btn-danger">Deletar</button>
+            </form>
+          </td>
         </tr>
 
         {% endfor %}
