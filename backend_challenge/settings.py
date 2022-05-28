@@ -135,15 +135,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # User Model
 AUTH_USER_MODEL = "users.User"
 
-# Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Email settings: Development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+'''
+# Email settings: Procution
+ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+'''
+
 '''
 Gmail	        - smtp.gmail.com
 Outlook/Hotmail	- smtp-mail.outlook.com
 Yahoo	        - smtp.mail.yahoo.com
 '''
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
