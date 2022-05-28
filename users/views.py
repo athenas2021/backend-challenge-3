@@ -15,6 +15,7 @@ def create_user(request):
     if request.method == 'POST':
         if not request.POST['username'] is None and not request.POST['email'] is None:
             try:
+                # Gera senha
                 import random
                 passw = str(random.randint(100000, 999999))
                 user = User(
@@ -23,6 +24,7 @@ def create_user(request):
                     password = passw
                     )
                 user.save()
+                # Manda e-mail com senha
                 send_mail(
                     'Nova conta',
                     'Sua senha: {passw}.'.format(passw=passw),
@@ -30,12 +32,8 @@ def create_user(request):
                     [request.POST['email']],
                     fail_silently=False,
                 )
-                print('teste2')
-                
-                
-            except Exception:
-                print(dir(Exception.args))
-                print('Não gravou usuário', Exception)
+            except Exception as e:
+                print('Não gravou usuário', e)
         return render(request, 'users.html')
 
 def user(request):
